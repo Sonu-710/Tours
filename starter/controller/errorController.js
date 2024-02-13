@@ -11,9 +11,17 @@ module.exports = (err, req, res, next) => {
     if (error.code == '11000') error = handleDublicateFieldsDB(error);
     if (error.name === 'ValidationError')
       error = handleValidationErrorDB(error);
+    if (error.name === 'JsonWebTokenError') error = handleJsonWebTokenError();
+    if (error.name === 'TokenExpiredError') error = handleTokenExpiredError();
     sendErrorProd(error, res);
   }
 };
+
+const handleJsonWebTokenError = () =>
+  new AppError('Invalid Token Please login agian', 401);
+
+const handleTokenExpiredError = () =>
+  new AppError('Token expired Error.Login in Again', 401);
 
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({

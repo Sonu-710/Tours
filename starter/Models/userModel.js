@@ -26,11 +26,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true],
     validate: {
+      //Custom validators work on save won't work when be check when being updated
       validator: function (el) {
         return el === this.password;
       },
+      message: 'Passwords are not the same!',
     },
   },
+  passwordChangedAt: Date,
 });
 
 userSchema.pre('save', async function (next) {
@@ -48,6 +51,14 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
+userSchema.methods.changePasswordAfter = function (JWTTimeStamp) {
+  let changedTimeStamp = 0;
+  if (this.passwordChangedAt) {
+    changedTimeStamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+    console.log(changedTimeStamp, JWTTimeStamp);
+  }
+  return JWTTimeStamp < changedTimeStamp;
+};
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
