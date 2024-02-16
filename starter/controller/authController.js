@@ -79,5 +79,31 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
 
   //GRANT ACCESS TO PROTECTED ROUTE
+  req.user = currentUser;
   next();
+});
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have permission to perfrom this action', 403),
+      );
+    }
+    next();
+  };
+};
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  //1 -- > Get User using the email
+
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError('There is no user with email : ',404));
+  }
+
+  //2 --> Generate Token
+  const resetToken=user.createPasswordResetToken();
+  await user.save({validateBeforeSave:false});
+  // next();
 });

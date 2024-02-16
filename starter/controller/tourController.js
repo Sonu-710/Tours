@@ -63,17 +63,21 @@ exports.updateTour = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteTour = catchAsync(async (req, res, next) => {
-  const deletedTour = await Tour.findByIdAndDelete(req.params.id);
-  if (!deletedTour) {
-    return next(new AppError('No tour found with that ID', 404));
-  }
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
-});
+exports.deleteTour = async (req, res) => {
+  try {
+    const deletedTour=await Tour.findByIdAndDelete(req.params.id);
 
+    res.status(204).json({
+      status: 'success',
+      data:null
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'failure',
+      message: err,
+    });
+  }
+};
 exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([
     {
