@@ -34,11 +34,15 @@ const userSchema = new mongoose.Schema({
     validate: {
       //Custom validators work on save won't work when be check when being updated
       validator: function (el) {
-
         return el === this.password;
       },
       message: 'Passwords are not the same!',
     },
+  },
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
@@ -60,11 +64,15 @@ userSchema.pre('save', function (next) {
   next();
 });
 
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
+  next();
+});
+
 userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword,
 ) {
-
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
