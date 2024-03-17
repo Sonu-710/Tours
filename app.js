@@ -5,7 +5,9 @@ const appError = require('./starter/utils/AppError');
 const globalErrorHandler = require('./starter/controller/errorController');
 const toursRouter = require('./starter/router/tours');
 const userRouter = require('./starter/router/users');
+const rateLimit = require('express-rate-limit');
 
+//GLOBAL MIDDLEWARE
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.static(`./starter/public`));
@@ -13,6 +15,14 @@ app.use(express.static(`./starter/public`));
 //   console.log("Hello from the middleware");
 //   next();
 // });
+
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP,please try again in an Hour!!',
+});
+
+app.use('/api', limiter);
 app.use((req, res, next) => {
   req.time = new Date();
   next();
