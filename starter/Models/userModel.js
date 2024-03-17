@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
     validate: {
       //Custom validators work on save won't work when be check when being updated
       validator: function (el) {
+
         return el === this.password;
       },
       message: 'Passwords are not the same!',
@@ -52,10 +53,18 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
 userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword,
 ) {
+
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
