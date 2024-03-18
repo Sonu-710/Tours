@@ -11,7 +11,7 @@ mongoose.connect(DB, {}).then(() => {
 });
 
 //Import all data to the DB
-const tours = JSON.parse(fs.readFileSync('tours-simple.json', 'utf-8'));
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 const importData = async () => {
   try {
     await Tour.create(tours);
