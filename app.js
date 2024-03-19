@@ -4,6 +4,7 @@ const appError = require('./starter/utils/AppError');
 const globalErrorHandler = require('./starter/controller/errorController');
 const toursRouter = require('./starter/router/tours');
 const userRouter = require('./starter/router/users');
+const reviewRouter=require('./starter/router/review')
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const xss = require('xss-clean');
@@ -63,6 +64,7 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/tours', toursRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/review',reviewRouter);
 
 app.all('*', (req, res, next) => {
   next(new appError(`Can't find ${req.originalUrl} on the server`));
