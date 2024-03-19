@@ -8,7 +8,7 @@ const express = require('express');
 const Tour = require('./../Models/tourModel');
 const APIFeatures = require('./../utils/APIFeatures');
 const catchAsync = require('./../utils/catchAsync');
-const AppError=require('./../utils/AppError');
+const AppError = require('./../utils/AppError');
 exports.addAlias = (req, res, next) => {
   req.query.limit = '5';
   req.query.sort = '-ratingAverage,price';
@@ -42,7 +42,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 });
 
 exports.getTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findOne({ _id: req.params.id });
+  const tour = await Tour.findOne({ _id: req.params.id }).populate('reviews');
   if (!tour) {
     return next(new AppError('No tour found with that ID', 404));
   }
@@ -65,11 +65,11 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 
 exports.deleteTour = async (req, res) => {
   try {
-    const deletedTour=await Tour.findByIdAndDelete(req.params.id);
+    const deletedTour = await Tour.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: 'success',
-      data:null
+      data: null,
     });
   } catch (err) {
     res.status(404).json({
