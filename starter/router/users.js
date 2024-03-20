@@ -23,7 +23,6 @@ router
   .post(userController.createUser);
 
 
-
 router
   .route('/:id')
   .get(userController.getUser)

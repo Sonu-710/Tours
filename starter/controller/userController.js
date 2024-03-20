@@ -1,6 +1,7 @@
 const User = require('./../Models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/AppError');
+const factory = require('./../controller/handlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -35,19 +36,10 @@ exports.getUser = (req, res) => {
   });
 };
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'failure',
-    message: 'Route is yet to be defined!!!',
-  });
-};
+//This should not be used to update Password
+exports.updateUser = factory.updateOne(User);
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'failure',
-    message: 'Route is yet to be defined!!!',
-  });
-};
+exports.deleteUser = factory.deleteOne(User);
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1 --> Create error if user Posts Password data
