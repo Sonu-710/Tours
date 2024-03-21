@@ -3,6 +3,7 @@ const authController = require('./../controller/authController');
 const reviewController = require('./../controller/reviewController');
 const reviewRouter = require('./../router/review');
 const express = require('express');
+const Tour = require('../Models/tourModel');
 const router = express.Router();
 
 // router.param('id', tourController.checkID);
@@ -23,6 +24,11 @@ router
     tourController.getMonthlyPlan,
   );
 
+router
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .get(tourController.getTourWithin);
+
+router.route('/distances/:latlng/unit/:unit').get(tourController.getDistance);
 router
   .route('/')
   .get(tourController.getAllTours)
