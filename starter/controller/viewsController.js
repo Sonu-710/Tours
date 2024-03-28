@@ -20,6 +20,18 @@ exports.getTour = catchAsync(async (req, res) => {
   });
   res.status(200).render('tours', {
     title: `${tour.name} tour`,
-    tour
+    tour,
   });
 });
+
+exports.getLoginFrom = (req, res) => {
+  res
+    .status(200)
+    .set(
+      'Content-Security-Policy',
+      "connect-src 'self' https://cdnjs.cloudflare.com",
+    )
+    .render('login', {
+      title: 'Log intom your Account',
+    });
+};

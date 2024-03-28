@@ -11,6 +11,7 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const mongoSanitze = require('express-mongo-sanitize');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(morgan('dev'));
 //Add Headers to make it secure
 app.use(helmet());
 app.use(express.json({ limit: '10kb' }));
+app.use(cookieParser());
 
 // app.use((req, res, next) => {
 //   console.log("Hello from the middleware");
@@ -58,6 +60,7 @@ app.use(
 
 app.use((req, res, next) => {
   req.time = new Date();
+  console.log(req.cookies);
   next();
 });
 
@@ -68,7 +71,7 @@ app.use((req, res, next) => {
 // app.patch("/api/v1/tours/:id", updateTour());
 // app.delete("/api/v1/tours/:id", deleteTour());
 
-app.use('/',viewRouter);
+app.use('/', viewRouter);
 app.use('/api/v1/tours', toursRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/review', reviewRouter);

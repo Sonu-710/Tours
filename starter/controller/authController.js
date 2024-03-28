@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const AppError = require('./../utils/AppError');
 const catchAsync = require('./../utils/catchAsync');
 const sendEmail = require('./../utils/email');
+const { crossOriginResourcePolicy } = require('helmet');
 
 const signToken = (id) => {
   return jwt.sign({ id: id }, process.env.JWT_SECRET, {
@@ -59,6 +60,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  }else if(req.cookies.jwt){
+    token= req.cookies.jwt;
   }
   //   console.log(token);
   if (!token) {
