@@ -10,14 +10,14 @@ const login = async (email, password) => {
     });
 
     if (res.data.status == 'success') {
-      showAlert('success','Logged in successfully!!');
+      showAlert('success', 'Logged in successfully!!');
       window.setTimeout(() => {
         location.assign('/');
       }, 1500);
     }
   } catch (err) {
     console.error(err);
-    showAlert('error',err.response.data.message);
+    showAlert('error', err.response.data.message);
   }
 };
 
@@ -42,3 +42,21 @@ const showAlert = (type, msg) => {
   document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
   window.setTimeout(hideAlert, 5000);
 };
+
+const logout = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: 'http://127.0.0.1:3000/api/v1/users/logout',
+    });
+    console.log(res.data.status);
+    if (res.data.status == 'success') location.reload(true);
+  } catch (err) {
+    console.log(err);
+    showAlert('error', 'Error Logging out! Try Again.');
+  }
+};
+
+const logoutBtn = document.querySelector('.nav__el--logout');
+
+if(logoutBtn) logoutBtn.addEventListener('click',logout);

@@ -7,10 +7,16 @@ exports.getOverview = catchAsync(async (req, res) => {
   //2-->Build Template
 
   //3-->Render that template using tour data
-  res.status(200).render('overview', {
-    title: 'All Tours',
-    tours,
-  });
+  res
+    .status(200)
+    .set(
+      'Content-Security-Policy',
+      "connect-src 'self' https://cdnjs.cloudflare.com",
+    )
+    .render('overview', {
+      title: 'All Tours',
+      tours,
+    });
 });
 
 exports.getTour = catchAsync(async (req, res) => {
@@ -18,10 +24,16 @@ exports.getTour = catchAsync(async (req, res) => {
     path: 'reviews',
     fields: 'review rating user',
   });
-  res.status(200).render('tours', {
-    title: `${tour.name} tour`,
-    tour,
-  });
+  res
+    .status(200)
+    .set(
+      'Content-Security-Policy',
+      "connect-src 'self' https://cdnjs.cloudflare.com",
+    )
+    .render('tours', {
+      title: `${tour.name} tour`,
+      tour,
+    });
 });
 
 exports.getLoginFrom = (req, res) => {
